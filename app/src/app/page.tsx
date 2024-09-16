@@ -18,7 +18,7 @@ export default () => {
           const {accessToken, url} = await fetch('/api/token').then(res => res.json());
           setToken(accessToken);
           setUrl(url);
-        }}>Connect</button>) : (
+        }}>Connect3</button>) : (
           <LiveKitRoom
             token={token}
             serverUrl={url}
