@@ -29,23 +29,27 @@ export default () => {
   return (
     <>
       <main className="main-container">
-        <div className="sidebar">
-          {token === null ? (
-            <button className="connect-button" onClick={async () => {
-              const {accessToken, url} = await fetch('/api/token').then(res => res.json());
-              setToken(accessToken);
-              setUrl(url);
-            }}>Connect</button>
-          ) : (
-            <LiveKitRoom
-              token={token}
-              serverUrl={url}
-              connectOptions={{autoSubscribe: true}}
-            >
-              <ActiveRoom />
-            </LiveKitRoom>
-          )}
-          <button className="upload-button">Upload Documents</button>
+        <div className="audio-chat-container">
+          <div className="audio-section">
+            {token === null ? (
+              <button className="connect-button" onClick={async () => {
+                const {accessToken, url} = await fetch('/api/token').then(res => res.json());
+                setToken(accessToken);
+                setUrl(url);
+              }}>Connect</button>
+            ) : (
+              <LiveKitRoom
+                token={token}
+                serverUrl={url}
+                connectOptions={{autoSubscribe: true}}
+              >
+                <ActiveRoom />
+              </LiveKitRoom>
+            )}
+          </div>
+          <div className="chat-section">
+            <button className="upload-button">Upload Documents</button>
+          </div>
         </div>
         <div className="coding-repl">
           <CodeMirror

@@ -13,28 +13,29 @@ body {
     padding: 20px;
   }
   
-  .audio-chat-container {
-    display: flex;
-    flex-grow: 1;
-    margin-right: 20px;
-  }
-  
-  .audio-section,
-  .chat-section {
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 8px;
-    flex: 1;
-    margin-right: 10px;
-  }
-  
-  .audio-section {
-    text-align: center;
-  }
-  
-  .chat-section {
-    text-align: center;
-  }
+.audio-chat-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.audio-section,
+.chat-section {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.coding-repl {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
+  flex: 1;
+  text-align: center;
+}
   
   .sidebar {
     width: 300px;
