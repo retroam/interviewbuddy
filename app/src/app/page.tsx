@@ -5,12 +5,9 @@ import {
   useLocalParticipant,
 } from '@livekit/components-react';
 import { useState } from "react";
-
-
 export default () => {
   const [token, setToken] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
-
   return (
     <>
       <main>
@@ -31,7 +28,6 @@ export default () => {
     </>
   );
 };
-
 const ActiveRoom = () => {
   const { localParticipant, isMicrophoneEnabled } = useLocalParticipant();
   return (
