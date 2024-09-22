@@ -13,19 +13,19 @@ body {
     padding: 20px;
   }
   
-.audio-chat-container {
-  display: flex;
-  justify-content: space-between;
+.audio-section {
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 8px;
   margin-bottom: 20px;
+  text-align: center;
 }
 
-.audio-section,
 .chat-section {
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
-  flex: 1;
-  margin-right: 10px;
+  margin-bottom: 20px;
   text-align: center;
 }
 
@@ -33,7 +33,6 @@ body {
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
-  flex: 1;
   text-align: center;
 }
   
