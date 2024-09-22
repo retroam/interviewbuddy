@@ -61,8 +61,14 @@ export default () => {
               }}
             />
           </div>
+          </div>
+          <div className="output-section">
+            <h3>Output</h3>
+            <pre>{output}</pre>
+          </div>
         </div>
-        <div className="coding-repl">
+        <div className="bottom-section">
+          <div className="coding-repl">
           <CodeMirror
             value={code}
             options={{

@@ -22,6 +22,12 @@ body {
   text-align: center;
 }
 
+.bottom-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
 .output-section {
   background-color: #2e2e2e;
   padding: 20px;
