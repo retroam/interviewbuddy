@@ -59,7 +59,7 @@ export default function InterviewBuddy() {
     }
   };
 
-  const handleDifficultyChange = (event) => {
+  const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setDifficulty(event.target.value);
   };
 
