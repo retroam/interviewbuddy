@@ -5,29 +5,68 @@ import {
   useLocalParticipant,
 } from '@livekit/components-react';
 import { useState } from "react";
+import { Controlled as CodeMirror } from 'react-codemirror2';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/theme/material.css';
+import 'codemirror/mode/javascript/javascript';
+
 export default () => {
   const [token, setToken] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
+  const [code, setCode] = useState('// Write your code here');
+  const [output, setOutput] = useState('');
+
+  const runCode = async () => {
+    const response = await fetch('/api/evaluate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code }),
+    });
+    const result = await response.json();
+    setOutput(result.output);
+  };
+
   return (
     <>
-      <main>
-        {token === null ? (<button onClick={async () => {
-          const {accessToken, url} = await fetch('/api/token').then(res => res.json());
-          setToken(accessToken);
-          setUrl(url);
-        }}>Connect3</button>) : (
-          <LiveKitRoom
-            token={token}
-            serverUrl={url}
-            connectOptions={{autoSubscribe: true}}
-          >
-            <ActiveRoom />
-          </LiveKitRoom>
-        )}
+      <main className="main-container">
+        <div className="sidebar">
+          {token === null ? (
+            <button className="connect-button" onClick={async () => {
+              const {accessToken, url} = await fetch('/api/token').then(res => res.json());
+              setToken(accessToken);
+              setUrl(url);
+            }}>Connect</button>
+          ) : (
+            <LiveKitRoom
+              token={token}
+              serverUrl={url}
+              connectOptions={{autoSubscribe: true}}
+            >
+              <ActiveRoom />
+            </LiveKitRoom>
+          )}
+          <button className="upload-button">Upload Documents</button>
+        </div>
+        <div className="coding-repl">
+          <CodeMirror
+            value={code}
+            options={{
+              mode: 'javascript',
+              theme: 'material',
+              lineNumbers: true,
+            }}
+            onBeforeChange={(editor, data, value) => {
+              setCode(value);
+            }}
+          />
+          <button onClick={runCode}>Run</button>
+          <pre>{output}</pre>
+        </div>
       </main>
     </>
   );
 };
+
 const ActiveRoom = () => {
   const { localParticipant, isMicrophoneEnabled } = useLocalParticipant();
   return (
