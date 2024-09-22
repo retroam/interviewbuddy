@@ -5,6 +5,7 @@ const LiveKitRoom = dynamic(() => import('@livekit/components-react').then(mod =
 const RoomAudioRenderer = dynamic(() => import('@livekit/components-react').then(mod => mod.RoomAudioRenderer), { ssr: false });
 const useLocalParticipant = dynamic(() => import('@livekit/components-react').then(mod => mod.useLocalParticipant), { ssr: false });
 import { useState } from "react";
+import { FaMicrophone } from 'react-icons/fa';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
@@ -35,7 +36,7 @@ export default () => {
               const {accessToken, url} = await fetch('/api/token').then(res => res.json());
               setToken(accessToken);
               setUrl(url);
-            }}>Connect</button>
+            }}><FaMicrophone /></button>
           ) : (
             <LiveKitRoom
               token={token}
