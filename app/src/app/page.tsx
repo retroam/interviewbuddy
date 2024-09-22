@@ -8,7 +8,7 @@ import { useState } from "react";
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/material.css';
-import 'codemirror/mode/javascript/javascript';
+import 'codemirror/mode/python/python';
 
 export default () => {
   const [token, setToken] = useState<string | null>(null);
@@ -53,7 +53,7 @@ export default () => {
           <CodeMirror
             value={code}
             options={{
-              mode: 'javascript',
+              mode: 'python',
               theme: 'material',
               lineNumbers: true,
             }}
