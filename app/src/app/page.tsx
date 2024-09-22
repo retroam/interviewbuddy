@@ -51,10 +51,12 @@ export default function InterviewBuddy() {
   };
 
   const handleDocumentUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files);
-    setDocuments([...documents, ...files]);
-    // Here you would typically upload the files to your server
-    console.log("Uploaded documents:", files);
+    if (event.target.files) {
+      const files = Array.from(event.target.files);
+      setDocuments([...documents, ...files]);
+      // Here you would typically upload the files to your server
+      console.log("Uploaded documents:", files);
+    }
   };
 
   const handleDifficultyChange = (event) => {
