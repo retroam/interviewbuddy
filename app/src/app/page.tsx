@@ -61,7 +61,6 @@ export default () => {
               }}
             />
           </div>
-          </div>
         </div>
         <div className="bottom-section">
           <div className="coding-repl">
