@@ -12,8 +12,8 @@ import 'codemirror/theme/material.css';
 import 'codemirror/mode/python/python';
 
 export default () => {
-  const [token, setToken] = useState<string | null>(null);
-  const [url, setUrl] = useState<string | null>(null);
+  const [token, setToken] = useState<string | undefined>(undefined);
+  const [url, setUrl] = useState<string | undefined>(undefined);
   const [code, setCode] = useState('// Write your code here');
   const [output, setOutput] = useState('');
 
