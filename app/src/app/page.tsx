@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 
 const LiveKitRoom = dynamic(() => import('@livekit/components-react').then(mod => mod.LiveKitRoom), { ssr: false });
 const RoomAudioRenderer = dynamic(() => import('@livekit/components-react').then(mod => mod.RoomAudioRenderer), { ssr: false });
-const useLocalParticipant = dynamic(() => import('@livekit/components-react').then(mod => mod.useLocalParticipant), { ssr: false });
+import { useLocalParticipant } from '@livekit/components-react';
 import { useState } from "react";
 import { FaMicrophone } from 'react-icons/fa';
 import { Controlled as CodeMirror } from 'react-codemirror2';
