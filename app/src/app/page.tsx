@@ -62,7 +62,10 @@ export default () => {
             }}
           />
           <button onClick={runCode}>Run</button>
-          <pre>{output}</pre>
+          <div className="output-section">
+            <h3>Output</h3>
+            <pre>{output}</pre>
+          </div>
         </div>
       </main>
     </>
