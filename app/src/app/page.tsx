@@ -25,7 +25,7 @@ export default () => {
     });
     const result = await response.json();
     setOutput(result.output);
-  };
+  }
 
   return (
     <>
