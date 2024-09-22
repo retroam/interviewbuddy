@@ -7,31 +7,19 @@ body {
   }
   
 .main-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   height: 100vh;
+  gap: 20px;
   padding: 20px;
 }
 
-.top-section {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.audio-section, .chat-section {
+.audio-section, .chat-section, .coding-repl, .output-section {
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-}
-
-.coding-repl {
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  flex-grow: 1;
 }
 
 .output-section {
