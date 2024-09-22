@@ -6,26 +6,23 @@ body {
     padding: 0;
   }
   
-  .main-container {
-    display: flex;
-    justify-content: space-between;
-    height: 100vh;
-    padding: 20px;
-  }
-  
-.audio-section {
-  background-color: #1e1e1e;
+.main-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  text-align: center;
 }
 
-.chat-section {
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.audio-section, .chat-section {
   background-color: #1e1e1e;
   padding: 20px;
   border-radius: 8px;
-  margin-bottom: 20px;
   text-align: center;
 }
 
@@ -34,7 +31,7 @@ body {
   padding: 20px;
   border-radius: 8px;
   text-align: center;
-  margin-bottom: 20px;
+  flex-grow: 1;
 }
 
 .output-section {

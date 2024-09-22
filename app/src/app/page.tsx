@@ -30,35 +30,37 @@ export default () => {
   return (
     <>
       <main className="main-container">
-        <div className="audio-section">
-          {token === null ? (
-            <button className="connect-button" onClick={async () => {
-              const {accessToken, url} = await fetch('/api/token').then(res => res.json());
-              setToken(accessToken);
-              setUrl(url);
-            }}><FaMicrophone /></button>
-          ) : (
-            <LiveKitRoom
-              token={token}
-              serverUrl={url}
-              connectOptions={{autoSubscribe: true}}
-            >
-              <ActiveRoom />
-            </LiveKitRoom>
-          )}
-        </div>
-        <div className="chat-section">
-          <input
-            type="file"
-            className="upload-button"
-            onChange={(e) => {
-              const files = e.target.files;
-              if (files && files.length > 0) {
-                // Handle file upload logic here
-                console.log(files[0]);
-              }
-            }}
-          />
+        <div className="top-section">
+          <div className="audio-section">
+            {token === null ? (
+              <button className="connect-button" onClick={async () => {
+                const {accessToken, url} = await fetch('/api/token').then(res => res.json());
+                setToken(accessToken);
+                setUrl(url);
+              }}><FaMicrophone /></button>
+            ) : (
+              <LiveKitRoom
+                token={token}
+                serverUrl={url}
+                connectOptions={{autoSubscribe: true}}
+              >
+                <ActiveRoom />
+              </LiveKitRoom>
+            )}
+          </div>
+          <div className="chat-section">
+            <input
+              type="file"
+              className="upload-button"
+              onChange={(e) => {
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  // Handle file upload logic here
+                  console.log(files[0]);
+                }
+              }}
+            />
+          </div>
         </div>
         <div className="coding-repl">
           <CodeMirror
