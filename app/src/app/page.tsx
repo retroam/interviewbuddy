@@ -47,7 +47,17 @@ export default () => {
           )}
         </div>
         <div className="chat-section">
-          <button className="upload-button">Upload Documents</button>
+          <input
+            type="file"
+            className="upload-button"
+            onChange={(e) => {
+              const files = e.target.files;
+              if (files && files.length > 0) {
+                // Handle file upload logic here
+                console.log(files[0]);
+              }
+            }}
+          />
         </div>
         <div className="coding-repl">
           <CodeMirror
