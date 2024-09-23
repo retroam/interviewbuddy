@@ -115,7 +115,7 @@ export default function InterviewBuddy() {
         <LiveKitRoom
           token={token}
           serverUrl={url}
-          connectOptions={{autoSubscribe: true}}
+          connectOptions={{ autoSubscribe: true } as RoomConnectOptions}
           video={true}
           audio={true}
           data-lk-theme="default"
