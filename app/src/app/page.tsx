@@ -24,7 +24,7 @@ import 'codemirror/mode/python/python';
 
 export default function InterviewBuddy() {
   const [token, setToken] = useState(null);
-  const [url, setUrl] = useState(null);
+  const [url, setUrl] = useState<string | undefined>(undefined);
   const [documents, setDocuments] = useState<File[]>([]);
   const [difficulty, setDifficulty] = useState('medium');
   const [codingQuestion, setCodingQuestion] = useState('');
