@@ -93,7 +93,7 @@ export default function InterviewBuddy() {
   return (
     <div className="interview-buddy" style={{ display: 'flex', flexDirection: 'column', height: '100vh', padding: '20px' }}>
       <div className="header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <button onClick={() => fileInputRef.current.click()}>
+        <button onClick={() => fileInputRef.current?.click()}>
           <FaUpload /> Upload documents
         </button>
         <input
