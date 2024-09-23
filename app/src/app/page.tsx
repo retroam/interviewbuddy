@@ -68,7 +68,7 @@ export default function InterviewBuddy() {
       const response = await fetch('/api/token');
       const { accessToken, serverUrl } = await response.json();
       setToken(accessToken);
-      setUrl(serverUrl || undefined);
+      setUrl(serverUrl ?? undefined);
       setIsInterviewStarted(true);
     } catch (error) {
       console.error("Failed to start interview:", error);
