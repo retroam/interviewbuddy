@@ -154,7 +154,7 @@ export default function InterviewBuddy() {
           <RoomAudioRenderer />
         </LiveKitRoom>
       ) : (
-        <div>Welcome to InterviewBuddy. Click "Start Interview" to begin.</div>
+        <div>Welcome to InterviewBuddy. Select a question difficulty, click "Start Interview" to begin.</div>
       )}
     </div>
   );
