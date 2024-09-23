@@ -31,7 +31,7 @@ export default function InterviewBuddy() {
   const [code, setCode] = useState('# Write your code here');
   const [output, setOutput] = useState('');
   const [isInterviewStarted, setIsInterviewStarted] = useState(false);
-  const fileInputRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (isInterviewStarted) {
