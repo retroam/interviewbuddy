@@ -1,4 +1,6 @@
-'use client';
+type RoomConnectOptions = {
+  autoSubscribe?: boolean;
+};
 import dynamic from 'next/dynamic';
 import React, { useState, useRef, useEffect } from "react";
 import { useLocalParticipant } from '@livekit/components-react';
