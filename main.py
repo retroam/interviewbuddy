@@ -13,6 +13,10 @@ from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the FastAPI application!"}
+
 # Global variables
 current_code = ""
 pdf_analysis = {}
