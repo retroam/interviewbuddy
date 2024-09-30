@@ -1,4 +1,4 @@
-from server import app
+from server import app, pdf_analysis, current_code
 import asyncio
 from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, llm
 from livekit.agents.voice_assistant import VoiceAssistant
