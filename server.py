@@ -9,11 +9,19 @@ import os
 import tempfile
 import subprocess
 from fastapi import FastAPI, File, UploadFile, Form, Body
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
-@app.get("/")
+# Allow CORS for all origins (adjust as needed for production)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Update this to specific domains in production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 async def read_root():
     return {"message": "Welcome to the FastAPI application!"}
 
