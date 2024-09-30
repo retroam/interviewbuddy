@@ -1,93 +1,96 @@
+/* styles.css */
 body {
-    background-color: #121212;
-    color: #ffffff;
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-.main-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  background-color: #121212;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.interview-buddy {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
-  gap: 20px;
   padding: 20px;
 }
 
-.audio-section, .chat-section, .coding-repl, .output-section {
+.welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.welcome-screen h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.options {
+  display: flex;
+  gap: 10px;
+}
+
+.options button,
+.options select {
+  background-color: #1e1e1e;
+  color: #00d1b2;
+  border: 1px solid #00d1b2;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.livekit-room {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.interview-container {
+  display: flex;
+  flex: 1;
+}
+
+.video-section {
+  flex: 1;
+}
+
+.coding-section {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
   background-color: #1e1e1e;
   padding: 20px;
-  border-radius: 8px;
-  text-align: center;
+  overflow-y: auto;
 }
 
-.bottom-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+.coding-section h3 {
+  color: #00d1b2;
+}
+
+.coding-section button {
+  background-color: #00d1b2;
+  border: none;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .output-section {
   background-color: #2e2e2e;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: left;
-  color: #ffffff;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
 }
-  
-  .sidebar {
-    width: 300px;
-    background-color: #1e1e1e;
-    padding: 20px;
-    border-radius: 8px;
-  }
-  
-  h3 {
-    color: #00d1b2;
-  }
-  
-  .connect-button, .toggle-mic-button {
-    background-color: #00d1b2;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  .toggle-mic-button {
-    margin-top: 20px;
-  }
-  
-  .mic-status {
-    margin-top: 10px;
-  }
-  
-  .status span {
-    color: #ff3860;
-  }
-  
-  .color-options {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .color-box {
-    width: 30px;
-    height: 30px;
-    background-color: #333;
-    border: 2px solid #00d1b2;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-  
-  .color-box.selected {
-    background-color: #00d1b2;
-  }
-  
-  .qr-code img {
-    max-width: 100%;
-    height: auto;
-  }
-  
+
+.output-section h4 {
+  margin: 0 0 10px 0;
+}
+
+.output-section pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
