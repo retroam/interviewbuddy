@@ -21,7 +21,7 @@ This project consists of two main components: a FastAPI server and a Next.js ser
 1. Navigate to the directory containing `server.py`.
 2. Run the FastAPI server with the following command:
    ```bash
-   python server.py
+   uvicorn server:app --reload
    ```
 
 ### Running the Next.js Server
@@ -32,7 +32,15 @@ This project consists of two main components: a FastAPI server and a Next.js ser
    npm run dev
    ```
 
-### Communication Between Servers
+### Running the Main Application
+
+1. Navigate to the directory containing `main.py`.
+2. Run the main application with the following command:
+   ```bash
+   python main.py dev
+   ```
+
+### Communication Between Servers and Main Application
 
 - The Next.js server will make API requests to the FastAPI server for various functionalities such as file uploads, code execution, and more.
 - Ensure that both servers are running simultaneously for the application to function correctly.
