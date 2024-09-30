@@ -40,7 +40,15 @@ This project consists of two main components: a FastAPI server and a Next.js ser
    python main.py dev
    ```
 
-### Communication Between Servers and Main Application
+### Communication Between Frontend, FastAPI Server, and Main Application
+
+- The Next.js frontend communicates with the FastAPI server (`server.py`) via HTTP requests. Ensure that the FastAPI server is running and accessible at the expected URL and port.
+- The `main.py` script can communicate with the FastAPI server by making HTTP requests to its endpoints. Ensure that both are running and configured to communicate over the correct URLs and ports.
+- Use environment variables to configure the URLs and ports for each service. For example, you can set `FASTAPI_URL` and `NEXTJS_URL` in a `.env` file.
+
+### Accessing the Application
+
+- Once both servers are running, you can access the application by navigating to `http://localhost:3000` in your web browser.
 
 - The Next.js server will make API requests to the FastAPI server for various functionalities such as file uploads, code execution, and more.
 - Ensure that both servers are running simultaneously for the application to function correctly.
