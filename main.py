@@ -114,6 +114,7 @@ async def run_code(code: str = Body(...)):
             stdout, stderr = process.communicate(timeout=10)  # 10 seconds timeout
         except subprocess.TimeoutExpired:
             process.kill()
+            stdout, stderr = process.communicate()  # Ensure process resources are released
             return JSONResponse(content={"output": "Code execution timed out after 10 seconds."})
 
         # Delete the temporary file
@@ -125,6 +126,10 @@ async def run_code(code: str = Body(...)):
         return JSONResponse(content={"output": output})
     except Exception as e:
         return JSONResponse(content={"output": f"An error occurred: {str(e)}"})
+    finally:
+        # Ensure the temporary file is deleted even if an error occurs
+        if os.path.exists(temp_file_path):
+            os.unlink(temp_file_path)
 
 @app.post("/api/submit-solution")
 async def submit_solution(solution: str = Body(...), difficulty: str = Body(...)):
