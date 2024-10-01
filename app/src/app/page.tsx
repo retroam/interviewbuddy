@@ -218,7 +218,7 @@ export default function InterviewBuddy() {
                 extensions={[python()]}
                 onChange={handleCodeChange}
               />
-               <Chat />
+              <Chat />
               <div className="button-group">
                 <button onClick={handleRunCode} disabled={isRunningCode}>
                   {isRunningCode ? 'Running...' : 'Run Code'}
