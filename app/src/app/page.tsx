@@ -194,50 +194,51 @@ export default function InterviewBuddy() {
           {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
       ) : (
-        <LiveKitRoom
-          token={token}
-          serverUrl={url}
-          connectOptions={{ autoSubscribe: true }}
-          data-lk-theme="default"
-          className="livekit-room"
-        >
-          <div className="interview-container">
-            <div className="video-section">
-              <SimpleVoiceAssistant />
-              <VoiceAssistantControlBar />
-              <RoomAudioRenderer />
-             
+        <LayoutContextProvider>
+          <LiveKitRoom
+            token={token}
+            serverUrl={url}
+            connectOptions={{ autoSubscribe: true }}
+            data-lk-theme="default"
+            className="livekit-room"
+          >
+            <div className="interview-container">
+              <div className="video-section">
+                <SimpleVoiceAssistant />
+                <VoiceAssistantControlBar />
+                <RoomAudioRenderer />
+              </div>
+              <div className="coding-section">
+                <h3>Coding Challenge</h3>
+                <pre>{codingChallenge}</pre>
+                <CodeMirror
+                  value={userSolution}
+                  height="200px"
+                  theme={vscodeDark}
+                  extensions={[python()]}
+                  onChange={handleCodeChange}
+                />
+                <Chat />
+                <div className="button-group">
+                  <button onClick={handleRunCode} disabled={isRunningCode}>
+                    {isRunningCode ? 'Running...' : 'Run Code'}
+                  </button>
+                  <button onClick={handleSubmitSolution} disabled={isLoading}>
+                    {isLoading ? 'Submitting...' : 'Submit Solution'}
+                  </button>
+                </div>
+                <div className="output-section">
+                  <h4>Code Output:</h4>
+                  <pre>{codeOutput}</pre>
+                </div>
+                <div className="output-section">
+                  <h4>Evaluation Output:</h4>
+                  <pre>{evaluationOutput}</pre>
+                </div>
+              </div>
             </div>
-            <div className="coding-section">
-              <h3>Coding Challenge</h3>
-              <pre>{codingChallenge}</pre>
-              <CodeMirror
-                value={userSolution}
-                height="200px"
-                theme={vscodeDark}
-                extensions={[python()]}
-                onChange={handleCodeChange}
-              />
-              <Chat />
-              <div className="button-group">
-                <button onClick={handleRunCode} disabled={isRunningCode}>
-                  {isRunningCode ? 'Running...' : 'Run Code'}
-                </button>
-                <button onClick={handleSubmitSolution} disabled={isLoading}>
-                  {isLoading ? 'Submitting...' : 'Submit Solution'}
-                </button>
-              </div>
-              <div className="output-section">
-                <h4>Code Output:</h4>
-                <pre>{codeOutput}</pre>
-              </div>
-              <div className="output-section">
-                <h4>Evaluation Output:</h4>
-                <pre>{evaluationOutput}</pre>
-              </div>
-            </div>
-          </div>
-        </LiveKitRoom>
+          </LiveKitRoom>
+        </LayoutContextProvider>
       )}
       <style jsx global>{`
         body {
