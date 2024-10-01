@@ -40,7 +40,7 @@ async def process_and_analyze_pdf(file_path):
             text += page.get_text()
         
         # Summarize using OpenAI
-        summary = await openai.LLM().complete(
+        summary = await openai.LLM().generate(
             prompt=f"Please summarize the following text concisely:\n\n{text}",
             max_tokens=200
         )
@@ -53,7 +53,7 @@ async def process_and_analyze_pdf(file_path):
         top_topics = [feature_names[i] for i in tfidf_sorting[:5]]
         
         # Generate interview questions based on topics
-        questions = await openai.LLM().complete(
+        questions = await openai.LLM().generate(
             prompt=f"Generate 3 interview questions based on these topics: {', '.join(top_topics)}",
             max_tokens=150
         )
