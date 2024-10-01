@@ -7,6 +7,7 @@ import {
   RoomAudioRenderer,
   useVoiceAssistant,
   VoiceAssistantControlBar,
+  Chat
 } from '@livekit/components-react';
 import "@livekit/components-styles";
 import dynamic from 'next/dynamic';
@@ -123,11 +124,12 @@ export default function InterviewBuddy() {
   const handleRunCode = async () => {
     setIsRunningCode(true);
     try {
-      const response = await fetch('/api/run-code', {
+      const response = await fetch('http://localhost:8000/api/run-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: userSolution }),
       });
+      console.log(userSolution);
       const result = await response.json();
       setCodeOutput(result.output);
     } catch (error) {
@@ -204,6 +206,7 @@ export default function InterviewBuddy() {
               <SimpleVoiceAssistant />
               <VoiceAssistantControlBar />
               <RoomAudioRenderer />
+             
             </div>
             <div className="coding-section">
               <h3>Coding Challenge</h3>
@@ -215,6 +218,7 @@ export default function InterviewBuddy() {
                 extensions={[python()]}
                 onChange={handleCodeChange}
               />
+               <Chat />
               <div className="button-group">
                 <button onClick={handleRunCode} disabled={isRunningCode}>
                   {isRunningCode ? 'Running...' : 'Run Code'}
