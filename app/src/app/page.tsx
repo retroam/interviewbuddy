@@ -7,11 +7,10 @@ import {
   RoomAudioRenderer,
   useVoiceAssistant,
   VoiceAssistantControlBar,
-  Chat
 } from '@livekit/components-react';
 import "@livekit/components-styles";
 import dynamic from 'next/dynamic';
-import { LayoutContextProvider } from './LayoutContextProvider';
+
 
 const CodeMirror = dynamic(
   () => import('@uiw/react-codemirror').then((mod) => mod.default),
@@ -195,7 +194,7 @@ export default function InterviewBuddy() {
           {errorMessage && <div className="error-message">{errorMessage}</div>}
         </div>
       ) : (
-        <LayoutContextProvider>
+    
           <LiveKitRoom
             token={token}
             serverUrl={url}
@@ -219,7 +218,6 @@ export default function InterviewBuddy() {
                   extensions={[python()]}
                   onChange={handleCodeChange}
                 />
-                <Chat />
                 <div className="button-group">
                   <button onClick={handleRunCode} disabled={isRunningCode}>
                     {isRunningCode ? 'Running...' : 'Run Code'}
@@ -239,7 +237,6 @@ export default function InterviewBuddy() {
               </div>
             </div>
           </LiveKitRoom>
-        </LayoutContextProvider>
       )}
       <style jsx global>{`
         body {
@@ -382,7 +379,7 @@ const SimpleVoiceAssistant = () => {
       state={state}
       barCount={7}
       trackRef={audioTrack}
-      style={{ height: '300px' }}
+      style={{ height: '300px', color: 'green' }}
     />
   );
 };
