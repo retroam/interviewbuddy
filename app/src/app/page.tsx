@@ -379,7 +379,7 @@ const SimpleVoiceAssistant = () => {
       state={state}
       barCount={7}
       trackRef={audioTrack}
-      style={{ height: '300px', color: 'green' }}
+      style={{ height: '300px', color: '#006400' }} // Deep green color
     />
   );
 };
