@@ -1,177 +1,388 @@
-"use client";
+'use client';
 
-type RoomConnectOptions = {
-  autoSubscribe?: boolean;
-};
+import { useState, useEffect, useRef } from "react";
+import {
+  BarVisualizer,
+  LiveKitRoom,
+  RoomAudioRenderer,
+  useVoiceAssistant,
+  VoiceAssistantControlBar,
+  Chat
+} from '@livekit/components-react';
+import "@livekit/components-styles";
 import dynamic from 'next/dynamic';
-import React, { useState, useRef, useEffect } from "react";
-import { useLocalParticipant } from '@livekit/components-react';
-import { FaMicrophone, FaUpload, FaPlay } from 'react-icons/fa';
-import '@livekit/components-styles';
+import { LayoutContextProvider } from './LayoutContextProvider';
 
-// Dynamically import LiveKit components to avoid SSR issues
-const LiveKitRoom = dynamic(() => import('@livekit/components-react').then(mod => mod.LiveKitRoom), { ssr: false });
-const RoomAudioRenderer = dynamic(() => import('@livekit/components-react').then(mod => mod.RoomAudioRenderer), { ssr: false });
-const VideoConference = dynamic(() => import('@livekit/components-react').then(mod => mod.VideoConference), { ssr: false });
-const ControlBar = dynamic(() => import('@livekit/components-react').then(mod => mod.ControlBar), { ssr: false });
-
-// Dynamically import CodeMirror to avoid SSR issues
 const CodeMirror = dynamic(
-  () => import('react-codemirror2').then((mod) => mod.Controlled),
+  () => import('@uiw/react-codemirror').then((mod) => mod.default),
   { ssr: false }
 );
 
-// Make sure to include these in your _app.js or similar
-import 'codemirror/lib/codemirror.css';
-import 'codemirror/theme/material.css';
-import 'codemirror/mode/python/python';
+import { python } from '@codemirror/lang-python';
+import { vscodeDark } from '@uiw/codemirror-theme-vscode';
 
 export default function InterviewBuddy() {
-  const [token, setToken] = useState(null);
-  const [url, setUrl] = useState<string | undefined>(undefined);
-  const [documents, setDocuments] = useState<File[]>([]);
-  const [difficulty, setDifficulty] = useState('medium');
-  const [codingQuestion, setCodingQuestion] = useState('');
-  const [code, setCode] = useState('# Write your code here');
-  const [output, setOutput] = useState('');
-  const [isInterviewStarted, setIsInterviewStarted] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [token, setToken] = useState<string | null>(null);
+  const [url, setUrl] = useState<string | null>(null);
+  const [difficulty, setDifficulty] = useState<string>("MEDIUM");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [codingChallenge, setCodingChallenge] = useState<string | null>(null);
+  const [userSolution, setUserSolution] = useState<string>("");
+  const [codeOutput, setCodeOutput] = useState<string>("");
+  const [evaluationOutput, setEvaluationOutput] = useState<string>("");
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadStatus, setUploadStatus] = useState<string>("");
+  const [isRunningCode, setIsRunningCode] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    if (isInterviewStarted) {
-      fetchQuestion();
-    }
-  }, [isInterviewStarted, difficulty]);
-
-  const fetchQuestion = async () => {
+  const handleConnect = async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
     try {
-      const response = await fetch(`/api/question?difficulty=${difficulty}`);
-      const data = await response.json();
-      setCodingQuestion(data.question);
-    } catch (error) {
-      console.error("Failed to fetch question:", error);
-      setCodingQuestion("Error loading question. Please try again.");
-    }
-  };
+      let uploadSuccess = false;
 
-  const handleDocumentUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      const files = Array.from(event.target.files);
-      setDocuments([...documents, ...files]);
-      // Here you would typically upload the files to your server
-      console.log("Uploaded documents:", files);
-    }
-  };
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("difficulty", difficulty);
 
-  const handleDifficultyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setDifficulty(event.target.value);
-  };
+        try {
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          });
 
-  const startInterview = async () => {
-    try {
-      const response = await fetch('/api/token');
-      const { accessToken, serverUrl } = await response.json();
+          if (uploadResponse.ok) {
+            uploadSuccess = true;
+            setUploadStatus("Document uploaded successfully!");
+          } else {
+            setUploadStatus("Failed to upload document, but we'll proceed without it.");
+          }
+        } catch (uploadError) {
+          console.error('Upload failed:', uploadError);
+          setUploadStatus("Failed to upload document, but we'll proceed without it.");
+        }
+      }
+
+      const tokenResponse = await fetch(`/api/token?difficulty=${difficulty}&documentUploaded=${uploadSuccess}`);
+      if (!tokenResponse.ok) {
+        throw new Error(`HTTP error! status: ${tokenResponse.status}`);
+      }
+      const { accessToken, url } = await tokenResponse.json();
       setToken(accessToken);
-      setUrl(serverUrl ?? undefined);
-      setIsInterviewStarted(true);
+      setUrl(url);
     } catch (error) {
-      console.error("Failed to start interview:", error);
+      console.error('Failed to connect:', error);
+      setErrorMessage('Failed to connect. Please try again later.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const runCode = async () => {
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile && selectedFile.type === "application/pdf") {
+      setFile(selectedFile);
+      setUploadStatus("File selected: " + selectedFile.name);
+    } else {
+      setFile(null);
+      setUploadStatus("Please select a valid PDF file.");
+    }
+  };
+
+  const handleFileUpload = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleCodeChange = (value: string) => {
+    setUserSolution(value);
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    debounceTimerRef.current = setTimeout(() => {
+      updateCodeInBackend(value);
+    }, 1000);
+  };
+
+  const updateCodeInBackend = async (code: string) => {
     try {
-      const response = await fetch('/api/evaluate', {
+      await fetch('/api/update-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
       });
-      const result = await response.json();
-      setOutput(result.output);
     } catch (error) {
-      console.error("Failed to run code:", error);
-      setOutput("Error running code. Please try again.");
+      console.error('Failed to update code in backend:', error);
     }
   };
 
+  const handleRunCode = async () => {
+    setIsRunningCode(true);
+    try {
+      const response = await fetch('/api/run-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: userSolution }),
+      });
+      console.log(userSolution);
+      const result = await response.json();
+      setCodeOutput(result.output);
+    } catch (error) {
+      console.error('Failed to run code:', error);
+      setCodeOutput('An error occurred while running the code.');
+    } finally {
+      setIsRunningCode(false);
+    }
+  };
+
+  const handleSubmitSolution = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/submit-solution', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ solution: userSolution, difficulty }),
+      });
+      const result = await response.json();
+      setEvaluationOutput(result.output);
+    } catch (error) {
+      console.error('Failed to submit solution:', error);
+      setEvaluationOutput('An error occurred while submitting your solution.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token) {
+      fetch(`/api/coding-challenge?difficulty=${difficulty}`)
+        .then(res => res.json())
+        .then(data => setCodingChallenge(data.challenge))
+        .catch(err => console.error('Failed to fetch coding challenge:', err));
+    }
+  }, [token, difficulty]);
+
   return (
-    <div className="interview-buddy" style={{ display: 'flex', flexDirection: 'column', height: '100vh', padding: '20px' }}>
-      <div className="header" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-        <button onClick={() => fileInputRef.current?.click()}>
-          <FaUpload /> Upload documents
-        </button>
-        <input
-          type="file"
-          multiple
-          onChange={handleDocumentUpload}
-          style={{ display: 'none' }}
-          ref={fileInputRef}
-        />
-        <select value={difficulty} onChange={handleDifficultyChange}>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-        {!isInterviewStarted && <button onClick={startInterview}>Start Interview</button>}
-      </div>
-      
-      {isInterviewStarted && token ? (
-        <LiveKitRoom
-          token={token}
-          serverUrl={url}
-          connectOptions={{ autoSubscribe: true } as RoomConnectOptions}
-          video={true}
-          audio={true}
-          data-lk-theme="default"
-          style={{ flex: 1, display: 'flex', flexDirection: 'column' }}
-        >
-          <div style={{ display: 'flex', flex: 1 }}>
-            <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-              <VideoConference />
-            </div>
-            <div style={{ width: '50%', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ flex: 1, border: '1px solid black', padding: '10px', overflowY: 'auto' }}>
-                <h3>Coding Question</h3>
-                <p>{codingQuestion}</p>
+    <div className="interview-buddy">
+      {token === null ? (
+        <div className="welcome-screen">
+          <h1>Interview Buddy</h1>
+          <div className="options">
+            <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+              <option>EASY</option>
+              <option>MEDIUM</option>
+              <option>HARD</option>
+            </select>
+            <input
+              type="file"
+              accept=".pdf"
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+              ref={fileInputRef}
+            />
+            <button onClick={handleFileUpload}>Upload Document (Optional)</button>
+            <button onClick={handleConnect} disabled={isLoading}>
+              {isLoading ? 'Connecting...' : 'Start Interview'}
+            </button>
+          </div>
+          {uploadStatus && <div className="upload-status">{uploadStatus}</div>}
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+        </div>
+      ) : (
+        <LayoutContextProvider>
+          <LiveKitRoom
+            token={token}
+            serverUrl={url}
+            connectOptions={{ autoSubscribe: true }}
+            data-lk-theme="default"
+            className="livekit-room"
+          >
+            <div className="interview-container">
+              <div className="video-section">
+                <SimpleVoiceAssistant />
+                <VoiceAssistantControlBar />
+                <RoomAudioRenderer />
+              </div>
+              <div className="coding-section">
+                <h3>Coding Challenge</h3>
+                <pre>{codingChallenge}</pre>
                 <CodeMirror
-                  value={code}
-                  options={{
-                    mode: 'python',
-                    theme: 'material',
-                    lineNumbers: true,
-                  }}
-                  onBeforeChange={(editor, data, value) => {
-                    setCode(value);
-                  }}
+                  value={userSolution}
+                  height="200px"
+                  theme={vscodeDark}
+                  extensions={[python()]}
+                  onChange={handleCodeChange}
                 />
-                <button onClick={runCode}><FaPlay /> Run Code</button>
+                <Chat />
+                <div className="button-group">
+                  <button onClick={handleRunCode} disabled={isRunningCode}>
+                    {isRunningCode ? 'Running...' : 'Run Code'}
+                  </button>
+                  <button onClick={handleSubmitSolution} disabled={isLoading}>
+                    {isLoading ? 'Submitting...' : 'Submit Solution'}
+                  </button>
+                </div>
                 <div className="output-section">
-                  <h4>Output:</h4>
-                  <pre>{output}</pre>
+                  <h4>Code Output:</h4>
+                  <pre>{codeOutput}</pre>
+                </div>
+                <div className="output-section">
+                  <h4>Evaluation Output:</h4>
+                  <pre>{evaluationOutput}</pre>
                 </div>
               </div>
             </div>
-          </div>
-          <ControlBar />
-          <RoomAudioRenderer />
-        </LiveKitRoom>
-      ) : (
-        <div>Welcome to InterviewBuddy. Select a question difficulty, click "Start Interview" to begin.</div>
+          </LiveKitRoom>
+        </LayoutContextProvider>
       )}
+      <style jsx global>{`
+        body {
+          background-color: #ffffff;
+          color: #333333;
+          font-family: 'Arial', sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+        .interview-buddy {
+          display: flex;
+          flex-direction: column;
+          height: 100vh;
+          padding: 20px;
+        }
+        .welcome-screen {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          height: 100%;
+        }
+        .welcome-screen h1 {
+          font-size: 2em;
+          margin-bottom: 20px;
+          color: #008000;
+        }
+        .options {
+          display: flex;
+          gap: 10px;
+        }
+        .options button,
+        .options select {
+          background-color: #ffffff;
+          color: #008000;
+          border: 2px solid #008000;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+        .options button:hover,
+        .options select:hover {
+          background-color: #008000;
+          color: #ffffff;
+        }
+        .options button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+        .livekit-room {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        .interview-container {
+          display: flex;
+          flex: 1;
+        }
+        .video-section {
+          flex: 1;
+          background-color: #f0f0f0;
+          padding: 20px;
+          border-radius: 10px;
+        }
+        .coding-section {
+          width: 50%;
+          display: flex;
+          flex-direction: column;
+          background-color: #ffffff;
+          padding: 20px;
+          overflow-y: auto;
+          border-left: 2px solid #008000;
+        }
+        .coding-section h3 {
+          color: #008000;
+        }
+        .coding-section .cm-editor {
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          overflow: hidden;
+        }
+        .button-group {
+          display: flex;
+          gap: 10px;
+          margin-top: 10px;
+        }
+        .button-group button {
+          flex: 1;
+          background-color: #008000;
+          color: #ffffff;
+          border: none;
+          padding: 10px;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+        .button-group button:hover {
+          background-color: #006400;
+        }
+        .button-group button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+        .output-section {
+          background-color: #f0f0f0;
+          padding: 10px;
+          margin-top: 10px;
+          border-radius: 5px;
+        }
+        .output-section h4 {
+          margin: 0 0 10px 0;
+          color: #008000;
+        }
+        .output-section pre {
+          white-space: pre-wrap;
+          word-wrap: break-word;
+          color: #333333;
+        }
+        .error-message {
+          color: #ff0000;
+          margin-top: 10px;
+          text-align: center;
+        }
+        .upload-status {
+          color: #008000;
+          margin-top: 10px;
+          text-align: center;
+        }
+      `}</style>
     </div>
   );
 }
 
-const ActiveRoom = () => {
-  const { localParticipant, isMicrophoneEnabled } = useLocalParticipant();
+const SimpleVoiceAssistant = () => {
+  const { state, audioTrack } = useVoiceAssistant();
+
   return (
-    <>
-      <RoomAudioRenderer />
-      <button onClick={() => {
-        localParticipant?.setMicrophoneEnabled(!isMicrophoneEnabled)
-      }}>
-        <FaMicrophone /> {isMicrophoneEnabled ? 'Mute' : 'Unmute'}
-      </button>
-    </>
+    <BarVisualizer
+      state={state}
+      barCount={7}
+      trackRef={audioTrack}
+      style={{ height: '300px' }}
+    />
   );
 };
