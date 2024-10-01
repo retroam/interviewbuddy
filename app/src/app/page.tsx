@@ -125,7 +125,7 @@ export default function InterviewBuddy() {
   const handleRunCode = async () => {
     setIsRunningCode(true);
     try {
-      const response = await fetch('http://localhost:8000/api/run-code', {
+      const response = await fetch('/api/run-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: userSolution }),
