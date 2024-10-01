@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: fastapi-server
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "uvicorn server:app --host 0.0.0.0 --port 8000"
+    plan: free
+    envVars:
+      - key: FASTAPI_URL
+        value: "http://0.0.0.0:8000"
+
+  - type: web
+    name: nextjs-frontend
+    env: node
+    buildCommand: "npm install"
+    startCommand: "npm run dev"
+    plan: free
+    envVars:
+      - key: NEXTJS_URL
+        value: "http://0.0.0.0:3000"
