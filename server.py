@@ -22,12 +22,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-async def read_root():
-    return {"message": "Welcome to the FastAPI application!"}
 
 # Global variables
-current_code = ""
-pdf_analysis = {}
+current_code = ""  # Initialize as an empty string
+pdf_analysis = {}  # Initialize as an empty dictionary
+
+@app.get("/")
+async def read_root():
+    return {"message": "Welcome to the FastAPI application!"}
 
 async def process_and_analyze_pdf(file_path):
     try:
@@ -66,30 +68,9 @@ async def process_and_analyze_pdf(file_path):
         print(f"An error occurred while processing the file: {str(e)}")
         return {"error": str(e)}
 
-async def generate_coding_challenge(difficulty):
-    prompt = f"Generate a {difficulty.lower()}-level coding challenge for a Python interview. Include the problem statement and example input/output."
-    response = await openai.LLM().complete(prompt=prompt, max_tokens=300)
-    return response.text
-
-async def evaluate_solution(solution, difficulty):
-    prompt = f"""Evaluate the following {difficulty.lower()}-level Python solution:
-
-    {solution}
-
-    Provide feedback on:
-    1. Correctness
-    2. Code efficiency
-    3. Code style and best practices
-    4. Potential improvements
-
-    Be concise but thorough in your evaluation."""
-
-    response = await openai.LLM().complete(prompt=prompt, max_tokens=300)
-    return response.text
-
 @app.post("/api/upload")
 async def upload_file(file: UploadFile = File(...), difficulty: str = Form(...)):
-    global pdf_analysis
+    global pdf_analysis  # Declare the global variable
     try:
         # Save the uploaded file
         file_path = f"uploads/{file.filename}"
@@ -108,12 +89,15 @@ async def upload_file(file: UploadFile = File(...), difficulty: str = Form(...))
 
 @app.post("/api/update-code")
 async def update_code(code: str = Body(...)):
-    global current_code
-    current_code = code
+    global current_code  # Declare the global variable
+    current_code = code  # Update the global variable with the new code
     return JSONResponse(content={"message": "Code updated successfully"})
 
 @app.post("/api/run-code")
 async def run_code(code: str = Body(...)):
+    global current_code  # Declare the global variable to ensure it's in sync
+    current_code = code  # Update the global variable with the new code
+
     try:
         # Create a temporary file to store the code
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as temp_file:
