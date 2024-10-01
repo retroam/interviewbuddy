@@ -21,8 +21,9 @@ services:
 
   - type: web
     name: livekit-server
-    env: docker
-    dockerfilePath: ./livekit/Dockerfile
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python main.py dev"
     plan: free
     envVars:
       - key: LIVEKIT_URL
