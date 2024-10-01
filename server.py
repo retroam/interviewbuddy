@@ -1,4 +1,12 @@
 import asyncio
+
+async def evaluate_solution(solution: str, difficulty: str) -> str:
+    # Placeholder implementation
+    return f"Evaluating solution for difficulty {difficulty}."
+
+async def generate_coding_challenge(difficulty: str) -> str:
+    # Placeholder implementation
+    return f"Generated coding challenge for difficulty {difficulty}."
 from livekit.agents import AutoSubscribe, JobContext, WorkerOptions, cli, llm
 from livekit.agents.voice_assistant import VoiceAssistant
 from livekit.plugins import deepgram, openai, silero
