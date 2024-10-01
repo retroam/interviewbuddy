@@ -9,7 +9,7 @@ async def entrypoint(ctx: JobContext):
     initial_ctx = llm.ChatContext().append(
         role="system",
         text=(
-            "You are a voice assistant created by LiveKit to conduct technical interviews. "
+            "You are a voice assistant created to conduct technical interviews. "
             "Your interface with users will be voice. Use short and concise responses, "
             "avoiding usage of unpronounceable punctuation. "
             f"Here's a summary of a document relevant to the interview:\n\n{pdf_analysis.get('summary', 'No summary available.')}\n\n"
@@ -37,7 +37,7 @@ async def entrypoint(ctx: JobContext):
     await asyncio.sleep(1)
 
     # Greets the user with an initial message
-    await assistant.say("Hello! I'm your AI interviewer today. We'll be discussing topics related to the document you submitted, and I'll also ask you some technical questions. Let's begin with your background. Can you tell me about your relevant experience?", allow_interruptions=True)
+    await assistant.say("Hello! I'm your mock interviewer today. We'll be discussing topics related to the document you submitted, and I'll also ask you some technical questions. Let's begin with your background. Can you tell me about your relevant experience?", allow_interruptions=True)
 
     # Main interview loop
     while True:

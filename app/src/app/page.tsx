@@ -124,12 +124,16 @@ export default function InterviewBuddy() {
   const handleRunCode = async () => {
     setIsRunningCode(true);
     try {
-      const response = await fetch('/api/run-code', {
+      const response = await fetch('http://127.0.0.1:8000/api/run-code', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: userSolution }),
+        headers: { 'Content-Type': 'text/plain' }, // Change to text/plain
+        body: userSolution, // Send the code as a raw string
       });
-      console.log(userSolution);
+  
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+  
       const result = await response.json();
       setCodeOutput(result.output);
     } catch (error) {
@@ -139,11 +143,10 @@ export default function InterviewBuddy() {
       setIsRunningCode(false);
     }
   };
-
   const handleSubmitSolution = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/submit-solution', {
+      const response = await fetch('http://127.0.0.1:8000/api/submit-solution', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ solution: userSolution, difficulty }),
@@ -160,7 +163,7 @@ export default function InterviewBuddy() {
 
   useEffect(() => {
     if (token) {
-      fetch(`/api/coding-challenge?difficulty=${difficulty}`)
+      fetch(`http://127.0.0.1:8000/api/coding-challenge?difficulty=${difficulty}`)
         .then(res => res.json())
         .then(data => setCodingChallenge(data.challenge))
         .catch(err => console.error('Failed to fetch coding challenge:', err));
