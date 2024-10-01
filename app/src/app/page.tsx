@@ -11,6 +11,7 @@ import {
 } from '@livekit/components-react';
 import "@livekit/components-styles";
 import dynamic from 'next/dynamic';
+import { LayoutContextProvider } from 'your-layout-context-library'; // Replace with the actual import path
 
 const CodeMirror = dynamic(
   () => import('@uiw/react-codemirror').then((mod) => mod.default),
