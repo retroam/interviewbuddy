@@ -1,0 +1,11 @@
+fastapi==0.115.0
+fitz==0.0.1.dev2
+livekit==0.16.3
+livekit_agents==0.9.0
+livekit_api==0.7.0
+livekit_plugins_deepgram==0.6.7
+livekit_plugins_openai==0.8.4
+livekit_plugins_silero==0.6.4
+livekit_protocol==0.6.0
+numpy==2.1.1
+scikit_learn==1.5.2
