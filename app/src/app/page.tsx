@@ -200,7 +200,7 @@ export default function InterviewBuddy() {
     
           <LiveKitRoom
             token={token}
-            serverUrl={url}
+            serverUrl={url || undefined}
             connectOptions={{ autoSubscribe: true }}
             data-lk-theme="default"
             className="livekit-room"
