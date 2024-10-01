@@ -18,3 +18,12 @@ services:
     envVars:
       - key: NEXTJS_URL
         value: "http://0.0.0.0:3000"
+
+  - type: web
+    name: livekit-server
+    env: docker
+    dockerfilePath: ./livekit/Dockerfile
+    plan: free
+    envVars:
+      - key: LIVEKIT_URL
+        value: "http://0.0.0.0:7880"
