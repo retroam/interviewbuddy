@@ -1,5 +1,5 @@
 fastapi
-fitz
+pymupdf
 livekit
 livekit_agents
 livekit_api
@@ -9,3 +9,4 @@ livekit_plugins_silero
 livekit_protocol
 numpy
 scikit_learn
+python-multipart
