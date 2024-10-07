@@ -1,11 +1,11 @@
-# fastapi
-# fitz
-# livekit
-# livekit_agents
-# livekit_api
-# livekit_plugins_deepgram
-# livekit_plugins_openai
-# livekit_plugins_silero
-# livekit_protocol
-# numpy
-# scikit_learn
+fastapi
+fitz
+livekit
+livekit_agents
+livekit_api
+livekit_plugins_deepgram
+livekit_plugins_openai
+livekit_plugins_silero
+livekit_protocol
+numpy
+scikit_learn
