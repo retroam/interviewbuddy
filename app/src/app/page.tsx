@@ -70,6 +70,7 @@ export default function InterviewBuddy() {
         throw new Error(`HTTP error! status: ${tokenResponse.status}`);
       }
       const { accessToken, url } = await tokenResponse.json();
+      console.log("url", url);
       setToken(accessToken);
       setUrl(url);
     } catch (error) {
